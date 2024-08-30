@@ -1,1 +1,1 @@
-# ugostiteljski-objekti-app
+# ugostiteljski-objekti-front
