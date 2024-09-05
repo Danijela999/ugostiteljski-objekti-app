@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
   Alert,
+  ScrollView,
+  TextInput, // Dodato za vertikalni skrol
 } from "react-native";
 import {
   Text,
@@ -14,110 +15,160 @@ import {
   Modal,
   Portal,
   Provider as PaperProvider,
-  TextInput,
 } from "react-native-paper";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+
+import * as ImagePicker from "expo-image-picker";
+import { AuthContext } from "../context/AuthContext";
 
 import { colors } from "../utils/colors";
-import { Picker } from "@react-native-picker/picker";
-import RestaurantCard from "../components/RestaurantCard";
-
-const profileInfo = {
-  image: require("../assets/profile.png"),
-  title: "Zdravo Danijela!",
-  name: "Danijela Grbović",
-  mail: "danijela.grbovic@gmail.com",
-};
-
-const restaurantInfo = [
-  {
-    image: require("../assets/smokvica.jpg"),
-    title: "Smokvica",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    title: "Bela Reka",
-    time: "15.08.2024. 19:00 - 22:00",
-    position: "Terasa",
-    category: "Večera",
-    guestCount: 2,
-  },
-  {
-    image: require("../assets/smokvica.jpg"),
-    title: "Smokvica",
-    time: "16.08.2024. 10:00 - 11:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-];
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const ProfileScreen = () => {
-  const [visible, setVisible] = useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const {
+    addImage,
+    changeProfilePhoto,
+    getUserByEmail,
+    changePasswordService,
+    isLoading,
+  } = useContext(AuthContext);
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileInfo, setPrfileInfo] = useState({
+    first_name: "",
+    email: "",
+    img_url: "",
+  });
+  const [secureEntery, setSecureEntery] = useState(true);
+  const [password, setPassword] = useState("");
+  useEffect(() => {
+    const getUserInformations = async () => {
+      const userInfo = await getUserByEmail();
+      const defaultImg = require("../assets/profile.png");
+      setProfileImage(defaultImg);
+      if (userInfo[0].img_url) {
+        setProfileImage({ uri: userInfo[0].img_url });
+      }
+      setPrfileInfo(userInfo[0]);
+      console.log(userInfo);
+    };
+
+    getUserInformations();
+  }, []);
+
+  const selectImage = async () => {
+    Alert.alert(
+      "Odaberite opciju",
+      "Izaberite fotografiju iz galerije ili uslikajte novu",
+      [
+        {
+          text: "Galerija",
+          onPress: pickImageFromGallery,
+        },
+        {
+          text: "Kamera",
+          onPress: takePhoto,
+        },
+        {
+          text: "Otkaži",
+          style: "cancel",
+        },
+      ]
+    );
+  };
+
+  const pickImageFromGallery = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage({ uri: result.assets[0].uri });
+      saveImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage({ uri: result.assets[0].uri });
+      saveImage(result.assets[0].uri);
+    }
+  };
+
+  const saveImage = async (uri) => {
+    const response = await addImage(uri);
+    const photoUrl = response.data.Location;
+    console.log("Sačuvana putanja slike:", response.data.Location, "putanjaaa");
+    await changeProfilePhoto(photoUrl);
+  };
+
+  const changePassword = async () => {
+    if (password === "") {
+      Alert.alert("Info", "Sifra mora biti popunjena!");
+      return;
+    }
+    const res = await changePasswordService(password);
+    if (res) {
+      Alert.alert("Info", "Sifra je uspesno promenjena!");
+      setPassword("");
+    } else {
+      Alert.alert("Greska", "Doslo je do greske prilikom promene sifre");
+      setPassword("");
+    }
+  };
 
   return (
     <PaperProvider>
+      <Spinner visible={isLoading} />
       <View style={styles.container}>
         <Card style={styles.card}>
-          <Card.Title title={profileInfo.title} titleStyle={styles.cardTitle} />
-          <Card.Content>
-            <Text style={styles.name}>{profileInfo.name}</Text>
-            <Button
-              mode="contained"
-              onPress={showModal}
-              style={styles.detailButton}
-            >
-              Prikaži detalje
-            </Button>
-          </Card.Content>
-        </Card>
-        <Card style={styles.card}>
+          <TouchableOpacity onPress={selectImage} style={styles.imageContainer}>
+            <Image source={profileImage} style={styles.image} />
+          </TouchableOpacity>
           <Card.Title
-            title="Aktivne rezervacije"
+            title={"Zdravo " + profileInfo.first_name + "!"}
             titleStyle={styles.cardTitle}
           />
-          <Card.Content>
-            {restaurantInfo.map((restaurant, index) => (
-              <RestaurantCard
-                key={index} // ili još bolje, koristite jedinstveni ID ako postoji: key={restaurant.id}
-                imageUrl={restaurant.image}
-                restaurantName={restaurant.title}
-                time={restaurant.time}
-                position={restaurant.position}
-                category={restaurant.category}
-                guestCount={restaurant.guestCount}
-              />
-            ))}
-          </Card.Content>
         </Card>
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={styles.modalContainer}
+        <Text style={styles.textProfile}>
+          Ime i prezime: {profileInfo.first_name} {profileInfo.last_name}
+        </Text>
+        <Text style={styles.textProfile}>Email: {profileInfo.email}</Text>
+
+        <View style={styles.inputContainer}>
+          <SimpleLineIcons name={"lock"} size={30} color={colors.secondary} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Unesi novu lozinku"
+            placeholderTextColor={colors.secondary}
+            secureTextEntry={secureEntery}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setSecureEntery((prev) => !prev);
+            }}
           >
-            <Image source={profileInfo.image} style={styles.image} />
-            <Text style={styles.modalTitle}>{profileInfo.name}</Text>
-            <Text style={styles.modalDescription}>{profileInfo.mail}</Text>
-            <Button mode="contained" style={styles.closeButton}>
-              Promeni lozinku
-            </Button>
-            <Button
-              mode="contained"
-              onPress={hideModal}
-              style={styles.closeButton}
-            >
-              Zatvori
-            </Button>
-          </Modal>
-        </Portal>
+            <SimpleLineIcons name={"eye"} size={20} color={colors.secondary} />
+          </TouchableOpacity>
+        </View>
+        <Button
+          mode="contained"
+          onPress={changePassword}
+          style={styles.detailButton}
+          labelStyle={{ fontSize: 18 }}
+        >
+          Promeni lozinku
+        </Button>
       </View>
     </PaperProvider>
   );
@@ -127,141 +178,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    marginTop: 50,
     backgroundColor: "#f5f5f5",
   },
   card: {
     marginBottom: 20,
+    height: "50%",
   },
   cardTitle: {
-    fontSize: 26,
-    paddingTop: 10,
+    fontSize: 30,
+    paddingTop: 5,
+    marginTop: 25,
+    paddingBottom: 30,
     fontWeight: "bold",
     textAlign: "center",
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  dateGuestContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  dateInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  input: {
-    flex: 1,
-    maxWidth: 120,
-    marginRight: 10,
-    fontSize: 14,
-    backgroundColor: colors.mint,
-  },
-  calendarButton: {
-    backgroundColor: colors.zelena,
-    padding: 10,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  guestInput: {
-    flex: 1,
-    maxWidth: 110,
-    marginLeft: 5,
-    fontSize: 14,
-    backgroundColor: colors.mint,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: colors.zelena,
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  picker: {
-    height: 50,
-  },
-  reservationButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.zelena,
-    borderRadius: 100,
-    marginLeft: "15%",
-    width: "70%",
-  },
   name: {
     fontSize: 18,
-    color: "gray",
+    color: "black",
     textAlign: "center",
     marginBottom: 10,
+  },
+  textProfile: {
+    fontSize: 22,
+    textAlign: "center",
+    marginTop: 15,
   },
   detailButton: {
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: "15%",
-    width: "70%",
+    marginLeft: "10%",
+    fontSize: 20,
+    height: 50,
+    width: "80%",
+    marginTop: 20,
     backgroundColor: colors.zelena,
     borderRadius: 100,
   },
-  modalContainer: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
+  imageContainer: {
     alignItems: "center",
+    marginBottom: 20,
   },
   image: {
-    width: 300,
-    height: 300,
-    marginBottom: 20,
-    borderRadius: 300,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  modalDescription: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  modalHours: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  closeButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.zelena,
+    width: 200,
+    height: 200,
     borderRadius: 100,
-    marginTop: 10,
-  },
-  timeSlotContainer: {
-    flexDirection: "row",
     marginTop: 20,
   },
-  timeSlot: {
-    width: 95,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
+  inputContainer: {
+    borderWidth: 1,
+    borderColor: colors.secondary,
     borderRadius: 100,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginLeft: "10%",
+    paddingHorizontal: 10,
+    marginTop: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 2,
+    marginVertical: 10,
+    height: 50,
+    width: "80%",
   },
-  timeSlotText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+  textInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    fontWeight: "light",
   },
 });
 

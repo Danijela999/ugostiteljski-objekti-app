@@ -57,20 +57,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    height: 40,
-    width: 140,
-    marginVertical: 30,
+    width: 150,
+    height: 150,
+    marginVertical: 10,
   },
   bannerImage: {
-    marginVertical: 20,
-    height: 300,
-    width: 300,
+    height: 250,
+    width: 250,
   },
   title: {
     fontSize: 40,
-    // fontFamily: Platform.select({
-    //   android: "Roboto_700Bold",
-    // }),
     fontFamily: "",
     paddingHorizontal: 20,
     textAlign: "center",

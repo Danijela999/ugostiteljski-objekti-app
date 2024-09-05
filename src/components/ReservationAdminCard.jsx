@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { Text, Button, Portal, Modal } from "react-native-paper";
 import { colors } from "../utils/colors";
 
-const RestaurantCard = ({
+const ReservationAdminCard = ({
+  title,
   imageUrl,
   restaurantName,
+  email,
   time,
   position,
   category,
@@ -15,19 +17,13 @@ const RestaurantCard = ({
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const deleteRezervation = () => {
-    Alert.alert(
-      "Greška",
-      "Došlo je do greške prilikom pokušaja da se obriše rezervacija."
-    );
-  };
-
   return (
     <View style={styles.container}>
       <Image source={imageUrl} style={styles.image} />
       <View style={styles.detailsContainer}>
-        <Text style={styles.restaurantName}>{restaurantName}</Text>
-        <Text style={styles.time}>{time}</Text>
+        <Text style={styles.reservationTitle}>{title}</Text>
+        <Text style={styles.textReservation}>{restaurantName}</Text>
+        <Text style={styles.textReservation}>{time}</Text>
         <Button mode="contained" style={styles.closeButton} onPress={showModal}>
           Prikaži detalje
         </Button>
@@ -39,7 +35,11 @@ const RestaurantCard = ({
           contentContainerStyle={styles.modalContainer}
         >
           <Image source={imageUrl} style={styles.imageModal} />
-          <Text style={styles.modalTitle}>{restaurantName}</Text>
+          <Text style={styles.modalTitle}>{title}</Text>
+          <Text style={styles.modalDescription}>
+            Naziv restorana: {restaurantName}
+          </Text>
+          <Text style={styles.modalDescription}>email: {email}</Text>
           <Text style={styles.modalDescription}>Vreme: {time}</Text>
           <Text style={styles.modalDescription}>
             Broj gostiju: {guestCount}
@@ -47,13 +47,6 @@ const RestaurantCard = ({
           <Text style={styles.modalDescription}>Pozicija: {position}</Text>
           <Text style={styles.modalDescription}>Kategorija: {category}</Text>
 
-          <Button
-            mode="contained"
-            style={styles.closeButton}
-            onPress={deleteRezervation}
-          >
-            Obriši rezervaciju
-          </Button>
           <Button
             mode="contained"
             onPress={hideModal}
@@ -72,39 +65,39 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  detailsContainer: {
+    flex: 1,
+    padding: 10,
+  },
   image: {
     width: "40%",
     height: 100,
     resizeMode: "cover",
   },
   imageModal: {
-    width: 300,
-    height: 300,
-    marginBottom: 20,
+    width: 250,
+    height: 250,
+    marginBottom: 10,
   },
-  detailsContainer: {
-    flex: 1,
-    padding: 10,
-  },
-  restaurantName: {
+  reservationTitle: {
     fontSize: 18,
     fontWeight: "bold",
   },
-  time: {
+  textReservation: {
     fontSize: 14,
     color: "gray",
-    marginVertical: 5,
+    marginVertical: 2,
   },
   closeButton: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.zelena,
     borderRadius: 100,
-    marginTop: 10,
+    marginTop: 5,
   },
   modalContainer: {
     backgroundColor: "white",
-    padding: 20,
+    padding: 15,
     borderRadius: 10,
     alignItems: "center",
   },
@@ -114,10 +107,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalDescription: {
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
     marginBottom: 10,
   },
 });
 
-export default RestaurantCard;
+export default ReservationAdminCard;

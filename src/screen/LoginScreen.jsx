@@ -9,8 +9,6 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { colors } from "../utils/colors";
-import { fonts } from "../utils/fonts";
-import { Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -31,13 +29,9 @@ const LoginScreen = () => {
     navigation.navigate("SIGNUP");
   };
 
-  const loginDemo = () => {
-    Alert.alert("Greška", "Pogrešno ste uneli korisničko ime ili lozinku.");
-  };
-
   return (
     <View style={styles.container}>
-      {/* <Spinner visible={isLoading} /> */}
+      <Spinner visible={isLoading} />
       <TouchableOpacity style={styles.backButtonWrapper} onPress={handleGoBack}>
         <Ionicons
           name={"arrow-back-outline"}

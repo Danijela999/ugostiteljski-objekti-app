@@ -1,12 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
-import {
-  useFonts,
-  Roboto_300Light,
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_700Bold,
-} from "@expo-google-fonts/roboto";
+import { StyleSheet } from "react-native";
+import React from "react";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -16,23 +9,13 @@ import LoginScreen from "./src/screen/LoginScreen";
 import { AuthProvider } from "./src/context/AuthContext";
 import AddRestaurant from "./src/screen/AddRestaurant";
 import Dashboard from "./src/screen/Dashboard";
-import ReservationScreen from "./src/screen/ReservationScreen";
+import CreateReservationScreen from "./src/screen/CreateReservationScreen";
 import { PaperProvider } from "react-native-paper";
 import ProfileScreen from "./src/screen/ProfileScreen";
+import DashboardAdmin from "./src/screen/DashboardAdmin";
 
 const Stack = createNativeStackNavigator();
 const App = () => {
-  const [fontsLoaded] = useFonts({
-    Roboto_300Light,
-    Roboto_400Regular,
-    Roboto_500Medium,
-    Roboto_700Bold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <NavigationContainer>
       <PaperProvider>
@@ -44,11 +27,14 @@ const App = () => {
           >
             <Stack.Screen name={"HOME"} component={HomeScreen} />
             <Stack.Screen name={"DASHBOARD"} component={Dashboard} />
-
+            <Stack.Screen name={"DASHBOARD_ADMIN"} component={DashboardAdmin} />
             <Stack.Screen name={"PROFILE"} component={ProfileScreen} />
             <Stack.Screen name={"LOGIN"} component={LoginScreen} />
             <Stack.Screen name={"MAP"} component={AddRestaurant} />
-            <Stack.Screen name={"RESERVATION"} component={ReservationScreen} />
+            <Stack.Screen
+              name={"RESERVATION"}
+              component={CreateReservationScreen}
+            />
             <Stack.Screen name="SIGNUP" component={SignupScreen} />
           </Stack.Navigator>
         </AuthProvider>

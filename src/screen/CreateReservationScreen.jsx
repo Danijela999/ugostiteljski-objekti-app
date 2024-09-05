@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -21,14 +21,11 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { colors } from "../utils/colors";
 import { Picker } from "@react-native-picker/picker";
+import { AuthContext } from "../context/AuthContext";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const restaurantInfo = {
   image: require("../assets/bela_reka.jpg"),
-  title: "Bela Reka",
-  location: "Omladinskih Brigada 90, Beograd",
-  description:
-    "Dobrodošli u Restoran Bela Reka! Ponuda našeg restorana krije u sebi ukus domaće tradicije i ljubavi prema kuvanju.",
-  open: "Radno vreme: 08:00 - 23:00",
 };
 
 const generateTimeSlots = () => {
@@ -46,7 +43,9 @@ const generateTimeSlots = () => {
   return slots;
 };
 
-const ReservationScreen = () => {
+const CreateReservationScreen = ({ route }) => {
+  const { item } = route.params;
+  const { address, description, name, startTime, endTime, imageUrl } = item;
   const [visible, setVisible] = useState(false);
   const [visibleReservation, setVisibleReservation] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -54,17 +53,21 @@ const ReservationScreen = () => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const hideModalReservation = () => {
+    console.log();
     Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
     setVisibleReservation(false);
   };
   const [guestCount, setGuestCount] = useState("");
-  const [category, setCategory] = useState("");
-  const [position, setPosition] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [position, setPosition] = useState(null);
   const [isAvailability, setAvailability] = useState(false);
   const timeSlots = generateTimeSlots();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [isPickerFocused, setIsPickerFocused] = useState(false);
   const [isPositionPickerFocused, setIsPositionPickerFocused] = useState(false);
+  const { getCategories, getPositions, isLoading } = useContext(AuthContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -89,16 +92,35 @@ const ReservationScreen = () => {
     setVisibleReservation(true);
   };
 
+  useEffect(() => {
+    const getCategoriesAndPositions = async () => {
+      const categories = await getCategories();
+      const positions = await getPositions();
+      setCategories(categories.data);
+      setPositions(positions.data);
+    };
+
+    getCategoriesAndPositions();
+  }, []);
+
+  const handleCategoryChange = (itemValue, itemIndex) => {
+    const selected = categories.find((category) => category.id === itemValue);
+    setCategory(selected);
+  };
+
+  const handlePositionChange = (itemValue, itemIndex) => {
+    const selected = positions.find((position) => position.id === itemValue);
+    setPosition(selected);
+  };
+
   return (
     <PaperProvider>
+      <Spinner visible={isLoading} />
       <View style={styles.container}>
         <Card style={styles.card}>
-          <Card.Title
-            title={restaurantInfo.title}
-            titleStyle={styles.cardTitle}
-          />
+          <Card.Title title={name} titleStyle={styles.cardTitle} />
           <Card.Content>
-            <Text style={styles.location}>{restaurantInfo.location}</Text>
+            <Text style={styles.location}>{address}</Text>
             <Button
               mode="contained"
               onPress={showModal}
@@ -169,35 +191,43 @@ const ReservationScreen = () => {
             </View>
             <View style={styles.pickerContainer}>
               <Picker
-                selectedValue={category}
+                selectedValue={category ? category.id : null}
                 style={styles.picker}
-                onValueChange={(itemValue) => setCategory(itemValue)}
+                onValueChange={handleCategoryChange}
                 onFocus={() => setIsPickerFocused(true)}
                 onBlur={() => setIsPickerFocused(false)}
               >
                 {!isPickerFocused && (
                   <Picker.Item label="Kategorija" value="" />
                 )}
-                <Picker.Item label="Doručak" value="doručak" />
-                <Picker.Item label="Ručak" value="ručak" />
-                <Picker.Item label="Večera" value="večera" />
+                {categories.map((category) => (
+                  <Picker.Item
+                    key={category.id}
+                    label={category.name}
+                    value={category.id}
+                  />
+                ))}
               </Picker>
             </View>
 
             <View style={styles.pickerContainer}>
               <Picker
-                selectedValue={position}
+                selectedValue={position ? position.id : null}
                 style={styles.picker}
-                onValueChange={(itemValue) => setPosition(itemValue)}
+                onValueChange={handlePositionChange}
                 onFocus={() => setIsPositionPickerFocused(true)}
                 onBlur={() => setIsPositionPickerFocused(false)}
               >
                 {!isPositionPickerFocused && (
                   <Picker.Item label="Pozicija" value="" />
                 )}
-                <Picker.Item label="Bašta" value="bašta" />
-                <Picker.Item label="Terasa" value="terasa" />
-                <Picker.Item label="Bilo koja pozicija" value="bkp" />
+                {positions.map((position) => (
+                  <Picker.Item
+                    key={position.id}
+                    label={position.name}
+                    value={position.id}
+                  />
+                ))}
               </Picker>
             </View>
             <Button
@@ -248,9 +278,7 @@ const ReservationScreen = () => {
             {visibleReservation && (
               <>
                 <Text style={styles.modalTitle}>Detalji rezervacije</Text>
-                <Text style={styles.modalText}>
-                  Ime restorana: {restaurantInfo.title}
-                </Text>
+                <Text style={styles.modalText}>Ime restorana: {name}</Text>
                 <Text style={styles.modalText}>
                   Datum: {date.toLocaleDateString()}
                 </Text>
@@ -261,8 +289,10 @@ const ReservationScreen = () => {
                     : selectedTimeSlot.getMinutes()}
                 </Text>
                 <Text style={styles.modalText}>Broj gostiju: {guestCount}</Text>
-                <Text style={styles.modalText}>Kategorija: {category}</Text>
-                <Text style={styles.modalText}>Pozicija: {position}</Text>
+                <Text style={styles.modalText}>
+                  Kategorija: {category.name}
+                </Text>
+                <Text style={styles.modalText}>Pozicija: {position.name}</Text>
                 <Button
                   mode="contained"
                   onPress={hideModalReservation}
@@ -280,15 +310,13 @@ const ReservationScreen = () => {
             onDismiss={hideModal}
             contentContainerStyle={styles.modalContainer}
           >
-            <Image source={restaurantInfo.image} style={styles.image} />
-            <Text style={styles.modalTitle}>{restaurantInfo.title}</Text>
-            <Text style={styles.modalDescription}>
-              {restaurantInfo.location}
+            <Image source={{uri: imageUrl}} style={styles.image} />
+            <Text style={styles.modalTitle}>{name}</Text>
+            <Text style={styles.modalDescription}>{address}</Text>
+            <Text style={styles.modalDescription}>{description}</Text>
+            <Text style={styles.modalHours}>
+              Radno vreme: {startTime}:00 - {endTime}:00{" "}
             </Text>
-            <Text style={styles.modalDescription}>
-              {restaurantInfo.description}
-            </Text>
-            <Text style={styles.modalHours}>{restaurantInfo.open}</Text>
             <Button
               mode="contained"
               onPress={hideModal}
@@ -444,4 +472,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReservationScreen;
+export default CreateReservationScreen;

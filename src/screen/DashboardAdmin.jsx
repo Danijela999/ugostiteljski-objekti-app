@@ -6,22 +6,24 @@ import ProfileScreen from "./ProfileScreen";
 import AllRestaurants from "./AllRestaurants";
 import { colors } from "../utils/colors";
 import SearchScreen from "./SearchScreen";
+import AddRestaurant from "./AddRestaurant";
+import ReservationAdminScreen from "./ReservationAdminScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function Dashboard() {
+export default function DashboardAdmin() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Ugostiteljski objekti") {
+          if (route.name === "Dodaj ugostiteljski objekat") {
             iconName = focused ? "restaurant" : "restaurant-outline";
           } else if (route.name === "Profil") {
             iconName = focused ? "person" : "person-outline";
-          } else if (route.name === "Pretraži") {
-            iconName = focused ? "search" : "search-outline";
+          } else if (route.name === "Rezervacije") {
+            iconName = focused ? "calendar" : "calendar-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -30,8 +32,11 @@ export default function Dashboard() {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <Tab.Screen name="Ugostiteljski objekti" component={AllRestaurants} />
-      <Tab.Screen name="Pretraži" component={SearchScreen} />
+      <Tab.Screen
+        name="Dodaj ugostiteljski objekat"
+        component={AddRestaurant}
+      />
+      <Tab.Screen name="Rezervacije" component={ReservationAdminScreen} />
       <Tab.Screen name="Profil" component={ProfileScreen} />
     </Tab.Navigator>
   );

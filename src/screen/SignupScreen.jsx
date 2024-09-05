@@ -54,8 +54,8 @@ const SignupScreen = () => {
             style={styles.textInput}
             placeholder="Unesi ime"
             placeholderTextColor={colors.secondary}
-            secureTextEntry={secureEntery}
-            keyboardType="phone-pad"
+            // secureTextEntry={secureEntery}
+            // keyboardType="phone-pad"
             value={firstName}
             onChangeText={(text) => setFirstName(text)}
           />
@@ -67,8 +67,8 @@ const SignupScreen = () => {
             style={styles.textInput}
             placeholder="Unesi prezime"
             placeholderTextColor={colors.secondary}
-            secureTextEntry={secureEntery}
-            keyboardType="phone-pad"
+            // secureTextEntry={secureEntery}
+            // keyboardType="phone-pad"
             value={lastName}
             onChangeText={(text) => setLastName(text)}
           />
