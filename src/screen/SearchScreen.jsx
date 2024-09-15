@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import {
   Text,
   Button,
@@ -47,13 +47,13 @@ const SearchScreen = ({ navigation }) => {
             },
           }}
         />
-        <Button
+        <TouchableOpacity
           mode="contained"
           onPress={searchRestaurants}
           style={styles.detailButton}
         >
-          Pretraži
-        </Button>
+          <Text style={styles.buttonText}>Pretraži</Text>
+        </TouchableOpacity>
         {isVisible && (
           <Card style={styles.card}>
             <Card.Title title="Restorani" titleStyle={styles.cardTitle} />
@@ -132,6 +132,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

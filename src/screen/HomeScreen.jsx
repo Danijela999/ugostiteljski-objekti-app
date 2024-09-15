@@ -1,9 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Platform } from "react-native";
 
 import React from "react";
 import { colors } from "../utils/colors";
-import { fonts } from "../utils/fonts";
 import { useNavigation } from "@react-navigation/native";
 const HomeScreen = () => {
   const navigation = useNavigation();

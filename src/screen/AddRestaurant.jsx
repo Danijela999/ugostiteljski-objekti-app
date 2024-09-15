@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import {
-  Button,
   Card,
   Checkbox,
   Provider as PaperProvider,
@@ -275,13 +274,13 @@ export default function AddRestaurant() {
                   },
                 }}
               />
-              <Button
+              <TouchableOpacity
                 mode="contained"
                 style={styles.buttonRestaurant}
                 onPress={searchAddress}
               >
-                Pretrazite adresu
-              </Button>
+                <Text style={styles.buttonText}>Pretrazite adresu</Text>
+              </TouchableOpacity>
             </Card.Content>
           </Card>
           <MapView style={styles.map} region={region} onPress={handleMapPress}>
@@ -324,15 +323,15 @@ export default function AddRestaurant() {
                   },
                 }}
               />
-              <Button
+              <TouchableOpacity
                 mode="contained"
                 style={styles.buttonRestaurant}
                 onPress={() => {
                   nextPage();
                 }}
               >
-                Dalje
-              </Button>
+                <Text style={styles.buttonText}>Dalje</Text>
+              </TouchableOpacity>
             </Card.Content>
           </Card>
         </View>
@@ -374,13 +373,13 @@ export default function AddRestaurant() {
               }}
             />
           </View>
-          <Button
+          <TouchableOpacity
             mode="contained"
             onPress={pickImage}
             style={styles.buttonImage}
           >
-            Dodaj sliku restorana
-          </Button>
+            <Text style={styles.buttonText}>Dodaj sliku restorana</Text>
+          </TouchableOpacity>
           {selectedImage && (
             <Image
               source={{ uri: selectedImage }}
@@ -407,24 +406,24 @@ export default function AddRestaurant() {
             </View>
           ))}
           <View style={styles.rowButton}>
-            <Button
+            <TouchableOpacity
               mode="contained"
               style={styles.buttonRestaurantNext}
               onPress={() => {
                 backPage();
               }}
             >
-              Nazad
-            </Button>
-            <Button
+              <Text style={styles.buttonText}>Nazad</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               mode="contained"
               style={styles.buttonRestaurantNext}
               onPress={() => {
                 nextPage();
               }}
             >
-              Dalje
-            </Button>
+              <Text style={styles.buttonText}>Dalje</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -472,15 +471,15 @@ export default function AddRestaurant() {
                 </View>
               )}
               {position && (
-                <Button
+                <TouchableOpacity
                   mode="contained"
                   style={styles.buttonAdd}
                   onPress={() => {
                     addTable();
                   }}
                 >
-                  Dodaj
-                </Button>
+                  <Text style={styles.buttonText}>Dodaj</Text>
+                </TouchableOpacity>
               )}
               {tableData.length > 0 && (
                 <View style={styles.table}>
@@ -504,33 +503,22 @@ export default function AddRestaurant() {
             </Card.Content>
           </Card>
           <View style={styles.rowButton}>
-            <Button
+            <TouchableOpacity
               mode="contained"
               style={styles.buttonRestaurantNext}
               onPress={() => {
                 backPage();
               }}
             >
-              Nazad
-            </Button>
-            <Button
+              <Text style={styles.buttonText}>Nazad</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               mode="contained"
               style={styles.buttonRestaurantNext}
               onPress={setRetaurantData}
-              // onPress={() => {
-              //   addRestaurant(
-              //     name,
-              //     description,
-              //     address,
-              //     marker.latitude,
-              //     marker.longitude,
-              //     startTime,
-              //     endTime
-              //   );
-              // }}
             >
-              Dodaj restoran
-            </Button>
+              <Text style={styles.buttonText}>Dodaj restoran</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -634,7 +622,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10, // Razmak između redova
+    marginBottom: 10,
     marginLeft: 30,
     width: "100%",
   },
@@ -658,7 +646,7 @@ const styles = StyleSheet.create({
   rowPosition: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10, // Razmak između redova
+    marginBottom: 10,
     width: "100%",
   },
   inputPosition: {
@@ -728,5 +716,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });

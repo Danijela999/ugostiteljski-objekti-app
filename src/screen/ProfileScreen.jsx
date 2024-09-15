@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  TextInput, // Dodato za vertikalni skrol
+  TextInput,
 } from "react-native";
 import {
   Text,
@@ -161,14 +161,14 @@ const ProfileScreen = () => {
             <SimpleLineIcons name={"eye"} size={20} color={colors.secondary} />
           </TouchableOpacity>
         </View>
-        <Button
+        <TouchableOpacity
           mode="contained"
           onPress={changePassword}
           style={styles.detailButton}
           labelStyle={{ fontSize: 18 }}
         >
-          Promeni lozinku
-        </Button>
+          <Text style={styles.buttonText}>Promeni lozinku</Text>
+        </TouchableOpacity>
       </View>
     </PaperProvider>
   );
@@ -242,6 +242,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     fontWeight: "light",
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

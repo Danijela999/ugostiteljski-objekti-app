@@ -1,12 +1,10 @@
 import {
-  Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Platform } from "react-native";
 
 import React, { useContext, useState } from "react";
 import { colors } from "../utils/colors";
@@ -46,7 +44,6 @@ const SignupScreen = () => {
       <View style={styles.textContainer}>
         <Text style={styles.headingText}>Hajde da pocnemo!</Text>
       </View>
-      {/* form  */}
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <SimpleLineIcons name={"user"} size={30} color={colors.secondary} />
@@ -54,8 +51,6 @@ const SignupScreen = () => {
             style={styles.textInput}
             placeholder="Unesi ime"
             placeholderTextColor={colors.secondary}
-            // secureTextEntry={secureEntery}
-            // keyboardType="phone-pad"
             value={firstName}
             onChangeText={(text) => setFirstName(text)}
           />
@@ -67,8 +62,6 @@ const SignupScreen = () => {
             style={styles.textInput}
             placeholder="Unesi prezime"
             placeholderTextColor={colors.secondary}
-            // secureTextEntry={secureEntery}
-            // keyboardType="phone-pad"
             value={lastName}
             onChangeText={(text) => setLastName(text)}
           />
@@ -104,15 +97,13 @@ const SignupScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.loginButtonWrapper}>
-          <Text
-            style={styles.loginText}
-            onPress={() => {
-              register(firstName, lastName, email, password);
-            }}
-          >
-            Registruj se
-          </Text>
+        <TouchableOpacity
+          style={styles.loginButtonWrapper}
+          onPress={() => {
+            register(firstName, lastName, email, password);
+          }}
+        >
+          <Text style={styles.loginText}>Registruj se</Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
           <Text style={styles.accountText}>Vec imas nalog!</Text>

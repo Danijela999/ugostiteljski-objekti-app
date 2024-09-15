@@ -1,18 +1,6 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  ScrollView, // Dodato za vertikalni skrol
-} from "react-native";
-import {
-  Text,
-  Button,
-  Card,
-  Modal,
-  Portal,
-  Provider as PaperProvider,
-} from "react-native-paper";
+import React from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { Card, Provider as PaperProvider } from "react-native-paper";
 import { colors } from "../utils/colors";
 import ReservationAdminCard from "../components/ReservationAdminCard";
 

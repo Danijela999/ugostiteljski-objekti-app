@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import {
   Text,
-  Button,
   Card,
   Modal,
   Portal,
@@ -23,10 +22,6 @@ import { colors } from "../utils/colors";
 import { Picker } from "@react-native-picker/picker";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-
-const restaurantInfo = {
-  image: require("../assets/bela_reka.jpg"),
-};
 
 const generateTimeSlots = () => {
   const slots = [];
@@ -121,13 +116,13 @@ const CreateReservationScreen = ({ route }) => {
           <Card.Title title={name} titleStyle={styles.cardTitle} />
           <Card.Content>
             <Text style={styles.location}>{address}</Text>
-            <Button
+            <TouchableOpacity
               mode="contained"
               onPress={showModal}
               style={styles.detailButton}
             >
-              Prikaži detalje
-            </Button>
+              <Text style={styles.buttonText}>Prikaži detalje</Text>
+            </TouchableOpacity>
           </Card.Content>
         </Card>
         <Card style={styles.card}>
@@ -230,13 +225,13 @@ const CreateReservationScreen = ({ route }) => {
                 ))}
               </Picker>
             </View>
-            <Button
+            <TouchableOpacity
               mode="contained"
               onPress={showAvailability}
               style={styles.reservationButton}
             >
-              Prikaži Raspoloživost
-            </Button>
+              <Text style={styles.buttonText}>Prikaži Raspoloživost</Text>
+            </TouchableOpacity>
           </Card.Content>
         </Card>
         {isAvailability && (
@@ -293,13 +288,13 @@ const CreateReservationScreen = ({ route }) => {
                   Kategorija: {category.name}
                 </Text>
                 <Text style={styles.modalText}>Pozicija: {position.name}</Text>
-                <Button
+                <TouchableOpacity
                   mode="contained"
                   onPress={hideModalReservation}
                   style={styles.closeButton}
                 >
-                  Potvrdi
-                </Button>
+                  <Text style={styles.buttonText}>Potvrdi</Text>
+                </TouchableOpacity>
               </>
             )}
           </Modal>
@@ -310,20 +305,20 @@ const CreateReservationScreen = ({ route }) => {
             onDismiss={hideModal}
             contentContainerStyle={styles.modalContainer}
           >
-            <Image source={{uri: imageUrl}} style={styles.image} />
+            <Image source={{ uri: imageUrl }} style={styles.image} />
             <Text style={styles.modalTitle}>{name}</Text>
             <Text style={styles.modalDescription}>{address}</Text>
             <Text style={styles.modalDescription}>{description}</Text>
             <Text style={styles.modalHours}>
               Radno vreme: {startTime}:00 - {endTime}:00{" "}
             </Text>
-            <Button
+            <TouchableOpacity
               mode="contained"
               onPress={hideModal}
               style={styles.closeButton}
             >
-              Zatvori
-            </Button>
+              <Text style={styles.buttonText}>Zatvori</Text>
+            </TouchableOpacity>
           </Modal>
         </Portal>
       </View>
@@ -443,6 +438,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.zelena,
     borderRadius: 100,
+    width: "50%",
     marginTop: 10,
   },
   timeSlotContainer: {
@@ -469,6 +465,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

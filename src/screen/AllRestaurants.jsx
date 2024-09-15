@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { Card, Button } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { colors } from "../utils/colors";
 import * as Location from "expo-location";
 import { AuthContext } from "../context/AuthContext";
@@ -79,10 +79,7 @@ const AllRestaurants = ({ navigation }) => {
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => handlePress(item)}>
           <Card style={styles.card}>
-            <Card.Cover
-              source={{uri: item.imageUrl}}
-              style={styles.image}
-            />
+            <Card.Cover source={{ uri: item.imageUrl }} style={styles.image} />
             <Card.Content>
               <Text style={styles.title}>{item.name}</Text>
               <Text style={styles.description}>{item.description}</Text>

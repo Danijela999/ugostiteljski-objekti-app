@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  // Load tokens from AsyncStorage when the component mounts
+
   useEffect(() => {
     const loadTokens = async () => {
       const storedAccessToken = await AsyncStorage.getItem("accessToken");
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      throw error; // If refresh fails or other errors occur, propagate them
+      throw error;
     }
   };
 
@@ -119,25 +119,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const addRestaurant = async (
-    params
-  ) => {
+  const addRestaurant = async (params) => {
     setIsLoading(true);
-    console.log(params)
+    console.log(params);
     const paramsNew = {
       ...params,
-      email: email
-    }
+      email: email,
+    };
     try {
       const res = await makeAuthenticatedRequest((token) =>
-        instance.post(
-          `/restaurants`,
-          paramsNew
-          ,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
+        instance.post(`/restaurants`, paramsNew, {
+          headers: { Authorization: `${token}` },
+        })
       );
 
       let restaurantInfo = res.data;
@@ -210,7 +203,6 @@ export const AuthProvider = ({ children }) => {
 
     const formattedDate = `${year}${month}${day}_${hours}${minutes}${seconds}`;
 
-    // Generisanje nasumičnog stringa
     const randomString = Math.random().toString(36).substring(2, 8);
     const fileName = `image_${formattedDate}_${randomString}.jpg`;
 
@@ -220,8 +212,7 @@ export const AuthProvider = ({ children }) => {
       name: fileName,
       type: "image/jpeg",
     });
-    //console.log(data);
-    //console.log(JSON.stringify(data, null, 4));
+
     try {
       const res = await makeAuthenticatedRequest((token) =>
         instance.post(`/images`, data, {
@@ -307,7 +298,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const url = "/users/" + email;
-      //  console.log("urllllllllllll",url);
+
       const res = await makeAuthenticatedRequest((token) =>
         instance.get(url, {
           headers: { Authorization: `${token}` },
@@ -327,9 +318,7 @@ export const AuthProvider = ({ children }) => {
   const changePasswordService = async (password) => {
     setIsLoading(true);
     try {
-      // console.log(password);
       const url = "/users/change-password";
-      //  console.log("urllllllllllll",url);
       const res = await makeAuthenticatedRequest((token) =>
         instance.patch(
           url,
@@ -342,7 +331,6 @@ export const AuthProvider = ({ children }) => {
           }
         )
       );
-      // console.log(res);
       let { code } = res.data;
       if (code == 201) {
         setIsLoading(false);
@@ -371,8 +359,8 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
       return restaurantInfo;
     } catch (error) {
-      console.log(`getAllRestaurantsByCoordinates error ${error}`);
       setIsLoading(false);
+      Alert.alert("Greska", "Ne postoji ugostiteljski objekat sa tim imenom!");
     }
   };
 

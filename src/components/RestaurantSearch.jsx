@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Image, StyleSheet, Alert } from "react-native";
-import { Text, Button, PaperProvider, Portal, Modal } from "react-native-paper";
+import React from "react";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Text } from "react-native-paper";
 import { colors } from "../utils/colors";
 
 const RestaurantSearch = ({ navigation, restaurant, image, time }) => {
@@ -10,17 +10,17 @@ const RestaurantSearch = ({ navigation, restaurant, image, time }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{uri: image}} style={styles.image} />
+      <Image source={{ uri: image }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.restaurantName}>{restaurant.name}</Text>
         <Text style={styles.time}>{time}</Text>
-        <Button
+        <TouchableOpacity
           mode="contained"
           style={styles.closeButton}
           onPress={() => handlePress(restaurant)}
         >
-          Rezervisi
-        </Button>
+          <Text style={styles.buttonText}>Rezervisi</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: "40%", // Zauzima 40% širine
+    width: "40%",
     height: 100,
     resizeMode: "cover",
   },
@@ -60,6 +60,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.zelena,
     borderRadius: 100,
     marginTop: 10,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

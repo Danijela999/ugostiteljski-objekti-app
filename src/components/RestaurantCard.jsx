@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, Alert } from "react-native";
-import { Text, Button, Portal, Modal } from "react-native-paper";
+import { View, Image, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import { Text, Portal, Modal } from "react-native-paper";
 import { colors } from "../utils/colors";
 
 const RestaurantCard = ({
@@ -28,9 +28,13 @@ const RestaurantCard = ({
       <View style={styles.detailsContainer}>
         <Text style={styles.restaurantName}>{restaurantName}</Text>
         <Text style={styles.time}>{time}</Text>
-        <Button mode="contained" style={styles.closeButton} onPress={showModal}>
-          Prikaži detalje
-        </Button>
+        <TouchableOpacity
+          mode="contained"
+          style={styles.detailsButton}
+          onPress={showModal}
+        >
+          <Text style={styles.buttonText}>Prikaži detalje</Text>
+        </TouchableOpacity>
       </View>
       <Portal>
         <Modal
@@ -47,20 +51,20 @@ const RestaurantCard = ({
           <Text style={styles.modalDescription}>Pozicija: {position}</Text>
           <Text style={styles.modalDescription}>Kategorija: {category}</Text>
 
-          <Button
+          <TouchableOpacity
             mode="contained"
             style={styles.closeButton}
             onPress={deleteRezervation}
           >
-            Obriši rezervaciju
-          </Button>
-          <Button
+            <Text style={styles.buttonText}>Obriši rezervaciju</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             mode="contained"
             onPress={hideModal}
             style={styles.closeButton}
           >
-            Zatvori
-          </Button>
+            <Text style={styles.buttonText}>Zatvori</Text>
+          </TouchableOpacity>
         </Modal>
       </Portal>
     </View>
@@ -101,6 +105,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.zelena,
     borderRadius: 100,
     marginTop: 10,
+    width: "50%",
+  },
+  detailsButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.zelena,
+    borderRadius: 100,
+    marginTop: 5,
   },
   modalContainer: {
     backgroundColor: "white",
@@ -117,6 +129,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginBottom: 10,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

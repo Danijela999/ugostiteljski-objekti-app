@@ -1,6 +1,4 @@
 import {
-  Alert,
-  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -43,7 +41,7 @@ const LoginScreen = () => {
         <Text style={styles.headingText}>Zdravo,</Text>
         <Text style={styles.headingText}>Dobrodošli!</Text>
       </View>
-      {/* form  */}
+
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Ionicons name={"mail-outline"} size={30} color={colors.secondary} />
@@ -74,18 +72,13 @@ const LoginScreen = () => {
             <SimpleLineIcons name={"eye"} size={20} color={colors.secondary} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.loginButtonWrapper}>
-          <Text
-            style={styles.loginText}
-            onPress={() => {
-              login(email, password);
-            }}
-            // onPress={() => {
-            //   loginDemo();
-            // }}
-          >
-            Uloguj se
-          </Text>
+        <TouchableOpacity
+          style={styles.loginButtonWrapper}
+          onPress={() => {
+            login(email, password);
+          }}
+        >
+          <Text style={styles.loginText}>Uloguj se</Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
           <Text style={styles.accountText}>Da li imas nalog?</Text>
