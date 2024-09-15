@@ -21,6 +21,7 @@ import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function AddRestaurant() {
   const [name, setName] = useState("");
@@ -42,6 +43,11 @@ export default function AddRestaurant() {
 
   const { isLoading, addRestaurant, getCategories, getPositions, addImage } =
     useContext(AuthContext);
+
+  const hours = Array.from({ length: 24 }, (_, i) => ({
+    label: `${i}:00`,
+    value: `${i}:00`,
+  }));
 
   const [region, setRegion] = useState({
     latitude: 44.787197,
@@ -340,38 +346,46 @@ export default function AddRestaurant() {
         <View style={styles.container}>
           <Text style={styles.subtitle}>Radno vreme</Text>
           <View style={styles.radnoVremeContainer}>
-            <TextInput
-              style={styles.inputRadnoVreme}
-              label="Pocetak"
-              keyboardType="numeric"
-              value={startTime}
-              onChangeText={setStartTime}
-              theme={{
-                colors: {
-                  text: colors.zelena,
-                  placeholder: colors.zelena,
-                  primary: colors.zelena,
-                  underlineColor: "transparent",
-                  background: "transparent",
-                },
-              }}
-            />
-            <TextInput
-              style={styles.inputRadnoVreme}
-              label="Kraj"
-              keyboardType="numeric"
-              value={endTime}
-              onChangeText={setEndTime}
-              theme={{
-                colors: {
-                  text: colors.zelena,
-                  placeholder: colors.zelena,
-                  primary: colors.zelena,
-                  underlineColor: "transparent",
-                  background: "transparent",
-                },
-              }}
-            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.label}>Otvaranje</Text>
+              <RNPickerSelect
+                onValueChange={(value) => setStartTime(value)}
+                items={hours}
+                style={{
+                  inputIOS: {
+                    ...styles.inputRadnoVreme,
+                    color: colors.zelena,
+                  },
+                  inputAndroid: {
+                    ...styles.inputRadnoVreme,
+                    color: colors.zelena,
+                  },
+                }}
+                value={startTime}
+                placeholder={{ label: "", value: null }}
+              />
+            </View>
+
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text style={styles.label}>Zatvaranje</Text>
+
+              <RNPickerSelect
+                onValueChange={(value) => setEndTime(value)}
+                items={hours}
+                style={{
+                  inputIOS: {
+                    ...styles.inputRadnoVreme,
+                    color: colors.zelena,
+                  },
+                  inputAndroid: {
+                    ...styles.inputRadnoVreme,
+                    color: colors.zelena,
+                  },
+                }}
+                value={endTime}
+                placeholder={{ label: "", value: null }}
+              />
+            </View>
           </View>
           <TouchableOpacity
             mode="contained"
@@ -580,16 +594,23 @@ const styles = StyleSheet.create({
   radnoVremeContainer: {
     flexDirection: "row",
     alignItems: "center",
-    height: 50,
-  },
-  inputRadnoVreme: {
-    marginLeft: 15,
+    justifyContent: "space-between",
     marginTop: 10,
-    marginBottom: 0,
-    paddingLeft: 5,
-    width: "42.5%",
+    marginLeft: "10%",
+    marginBottom: 5,
+    width: "80%",
+    height: 40,
+  },
+
+  inputRadnoVreme: {
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: colors.zelena,
+    borderRadius: 5,
     fontSize: 14,
     backgroundColor: colors.mint,
+    color: colors.zelena,
   },
   subtitle: {
     marginLeft: 15,
