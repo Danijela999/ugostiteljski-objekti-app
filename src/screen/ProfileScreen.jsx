@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   image: {
     width: 200,
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginLeft: "10%",
     paddingHorizontal: 10,
-    marginTop: 60,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     padding: 2,

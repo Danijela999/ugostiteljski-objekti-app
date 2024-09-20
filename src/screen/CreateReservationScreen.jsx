@@ -310,7 +310,7 @@ const CreateReservationScreen = ({ route }) => {
             <Text style={styles.modalDescription}>{address}</Text>
             <Text style={styles.modalDescription}>{description}</Text>
             <Text style={styles.modalHours}>
-              Radno vreme: {startTime}:00 - {endTime}:00{" "}
+              Radno vreme: {startTime} - {endTime}
             </Text>
             <TouchableOpacity
               mode="contained"

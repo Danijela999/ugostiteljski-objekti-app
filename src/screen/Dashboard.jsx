@@ -5,6 +5,7 @@ import ProfileScreen from "./ProfileScreen";
 import AllRestaurants from "./AllRestaurants";
 import { colors } from "../utils/colors";
 import SearchScreen from "./SearchScreen";
+import AllReservationsScreenUser from "./AllReservationsScreenUser";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,8 @@ export default function Dashboard() {
             iconName = focused ? "person" : "person-outline";
           } else if (route.name === "Pretraži") {
             iconName = focused ? "search" : "search-outline";
+          } else if (route.name === "Rezervacije") {
+            iconName = focused ? "calendar" : "calendar-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -32,6 +35,7 @@ export default function Dashboard() {
       <Tab.Screen name="Ugostiteljski objekti" component={AllRestaurants} />
       <Tab.Screen name="Pretraži" component={SearchScreen} />
       <Tab.Screen name="Profil" component={ProfileScreen} />
+      <Tab.Screen name="Rezervacije" component={AllReservationsScreenUser} />
     </Tab.Navigator>
   );
 }

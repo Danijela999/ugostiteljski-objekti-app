@@ -68,9 +68,8 @@ const SearchScreen = ({ navigation }) => {
                       time={
                         "Radno vreme: " +
                         restaurant.startTime +
-                        ":00 - " +
-                        restaurant.endTime +
-                        ":00"
+                        " - " +
+                        restaurant.endTime
                       }
                       restaurant={restaurant}
                     />
