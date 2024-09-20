@@ -8,7 +8,6 @@ const RestaurantCard = ({
   restaurantName,
   time,
   position,
-  category,
   guestCount,
 }) => {
   const [visible, setVisible] = useState(false);
@@ -49,7 +48,6 @@ const RestaurantCard = ({
             Broj gostiju: {guestCount}
           </Text>
           <Text style={styles.modalDescription}>Pozicija: {position}</Text>
-          <Text style={styles.modalDescription}>Kategorija: {category}</Text>
 
           <TouchableOpacity
             mode="contained"

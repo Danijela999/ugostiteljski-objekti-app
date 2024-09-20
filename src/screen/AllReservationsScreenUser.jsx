@@ -134,7 +134,6 @@ const AllReservationsScreenUser = () => {
                   restaurantName={reservation.restaurantName}
                   time={reservation.time}
                   position={reservation.position}
-                  category={reservation.category}
                   guestCount={reservation.guestCount}
                 />
               ))}
