@@ -40,7 +40,7 @@ const generateTimeSlots = () => {
 
 const CreateReservationScreen = ({ route }) => {
   const { item } = route.params;
-  const { address, description, name, startTime, endTime, imageUrl } = item;
+  const { id, address, description, name, startTime, endTime, imageUrl } = item;
   const [visible, setVisible] = useState(false);
   const [visibleReservation, setVisibleReservation] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -62,7 +62,8 @@ const CreateReservationScreen = ({ route }) => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [isPickerFocused, setIsPickerFocused] = useState(false);
   const [isPositionPickerFocused, setIsPositionPickerFocused] = useState(false);
-  const { getCategories, getPositions, isLoading } = useContext(AuthContext);
+  const { getCategories, getPositionsByRestaurant, isLoading } =
+    useContext(AuthContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -90,7 +91,7 @@ const CreateReservationScreen = ({ route }) => {
   useEffect(() => {
     const getCategoriesAndPositions = async () => {
       const categories = await getCategories();
-      const positions = await getPositions();
+      const positions = await getPositionsByRestaurant(id);
       setCategories(categories.data);
       setPositions(positions.data);
     };

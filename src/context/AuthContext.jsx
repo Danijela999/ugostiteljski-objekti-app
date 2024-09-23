@@ -107,7 +107,9 @@ export const AuthProvider = ({ children }) => {
       setUserInfo(userInfo);
       await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
       setIsLoading(false);
-      if (userJson.privilegeId == 2) {
+      if (userJson.privilegeId == 3) {
+        navigation.navigate("DASHBOARD_SUPERVIZOR");
+      } else if (userJson.privilegeId == 2) {
         navigation.navigate("DASHBOARD_ADMIN");
       } else {
         navigation.navigate("DASHBOARD");
@@ -116,6 +118,35 @@ export const AuthProvider = ({ children }) => {
       console.log(`login error ${error}`);
       Alert.alert("Greska", "Doslo je do greske!");
       setIsLoading(false);
+    }
+  };
+
+  const getAllUsers = async () => {
+    setIsLoading(true);
+    try {
+      const res = await instance.get(`/users/`);
+      let users = res.data;
+      console.log(users);
+      setIsLoading(false);
+      return users;
+    } catch (error) {
+      console.log(`getAllUsers error ${error}`);
+      Alert.alert("Greska", "Doslo je do greske!");
+      setIsLoading(false);
+    }
+  };
+
+  const changeRoles = async (params) => {
+    setIsLoading(true);
+    try {
+      const res = await instance.put(`/users/roles`, params);
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.log(`getAllUsers error ${error}`);
+      Alert.alert("Greska", "Doslo je do greske!");
+      setIsLoading(false);
+      return false;
     }
   };
 
@@ -189,13 +220,13 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+
   const addImage = async (imageUri) => {
     setIsLoading(true);
     const now = new Date();
 
-    // Formatiranje datuma i vremena
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // Dodavanje 1 jer su meseci 0-indeksirani
+    const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
@@ -268,6 +299,26 @@ export const AuthProvider = ({ children }) => {
       return positions;
     } catch (error) {
       console.log(`getPositions error ${error}`);
+      setIsLoading(false);
+    }
+  };
+
+  const getPositionsByRestaurant = async (restaurantId) => {
+    setIsLoading(true);
+
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(`/positions/restaurant?restaurantId=${restaurantId}`, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      let positions = res.data;
+
+      setIsLoading(false);
+      return positions;
+    } catch (error) {
+      console.log(`getPositionsByRestaurant error ${error}`);
       setIsLoading(false);
     }
   };
@@ -398,6 +449,8 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         register,
         login,
+        getAllUsers,
+        changeRoles,
         logout,
         addRestaurant,
         getAllRestaurantsByCoordinates,
@@ -405,6 +458,7 @@ export const AuthProvider = ({ children }) => {
         getAllRestaurants,
         getCategories,
         getPositions,
+        getPositionsByRestaurant,
         addImage,
         changeProfilePhoto,
         getUserByEmail,

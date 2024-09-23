@@ -13,6 +13,7 @@ import CreateReservationScreen from "./src/screen/CreateReservationScreen";
 import { PaperProvider } from "react-native-paper";
 import ProfileScreen from "./src/screen/ProfileScreen";
 import DashboardAdmin from "./src/screen/DashboardAdmin";
+import DashboarSupervizor from "./src/screen/DashboardSupervizor";
 
 const Stack = createNativeStackNavigator();
 const App = () => {
@@ -28,6 +29,10 @@ const App = () => {
             <Stack.Screen name={"HOME"} component={HomeScreen} />
             <Stack.Screen name={"DASHBOARD"} component={Dashboard} />
             <Stack.Screen name={"DASHBOARD_ADMIN"} component={DashboardAdmin} />
+            <Stack.Screen
+              name={"DASHBOARD_SUPERVIZOR"}
+              component={DashboarSupervizor}
+            />
             <Stack.Screen name={"PROFILE"} component={ProfileScreen} />
             <Stack.Screen name={"LOGIN"} component={LoginScreen} />
             <Stack.Screen name={"MAP"} component={AddRestaurant} />
