@@ -437,6 +437,58 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getAvailableSlots = async (params) => {
+    setIsLoading(true);
+    console.log(params);
+    const { date, guestCount, category, position, id } = params;
+    const positionId = position.id;
+    const categoryId = category.id;
+    console.log(positionId);
+    const dateOnly = date.toISOString().slice(0, 10);
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(
+          `reservations/slots?positionId=${positionId}&categoryId=${categoryId}&restaurantId=${id}&chairs=${guestCount}&dateReservation=${dateOnly}`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
+      );
+
+      const termins = res.data;
+      console.log(termins);
+      setIsLoading(false);
+      return termins;
+    } catch (error) {
+      setIsLoading(false);
+      console.log(`getAvailableSlots error ${error}`);
+    }
+  };
+
+  const addReservations = async (params) => {
+    setIsLoading(true);
+    console.log(params);
+    const paramsNew = {
+      ...params,
+      userId: email,
+    };
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.post(`/reservations`, paramsNew, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      const termins = res.data;
+      console.log(termins);
+      setIsLoading(false);
+      return termins;
+    } catch (error) {
+      setIsLoading(false);
+      console.log(`getAvailableSlots error ${error}`);
+    }
+  };
+
   const logout = async () => {
     setIsLoading(true);
     try {
@@ -486,6 +538,8 @@ export const AuthProvider = ({ children }) => {
         changeProfilePhoto,
         getUserByEmail,
         changePasswordService,
+        getAvailableSlots,
+        addReservations,
       }}
     >
       {children}

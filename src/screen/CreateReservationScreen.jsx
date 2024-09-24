@@ -23,14 +23,19 @@ import { Picker } from "@react-native-picker/picker";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-const generateTimeSlots = () => {
+const generateTimeSlots = (startTime, endTime) => {
   const slots = [];
   const start = new Date();
-  start.setHours(9, 0, 0, 0);
+  let startTimeInt = Number(startTime.split(":")[0]);
+  let endTimeInt = Number(endTime.split(":")[0]);
+  if (endTimeInt <= startTimeInt) {
+    endTimeInt += 24;
+  }
+  start.setHours(startTimeInt, 0, 0, 0);
   const end = new Date();
-  end.setHours(23, 0, 0, 0);
+  end.setHours(endTimeInt, 0, 0, 0);
 
-  while (start <= end) {
+  while (start < end) {
     slots.push(new Date(start));
     start.setMinutes(start.getMinutes() + 30);
   }
@@ -47,23 +52,25 @@ const CreateReservationScreen = ({ route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const hideModalReservation = () => {
-    console.log();
-    Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
-    setVisibleReservation(false);
-  };
+
   const [guestCount, setGuestCount] = useState("");
   const [categories, setCategories] = useState([]);
   const [positions, setPositions] = useState([]);
   const [category, setCategory] = useState(null);
   const [position, setPosition] = useState(null);
   const [isAvailability, setAvailability] = useState(false);
-  const timeSlots = generateTimeSlots();
+  const timeSlots = generateTimeSlots(startTime, endTime);
+  const [termins, setTermins] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [isPickerFocused, setIsPickerFocused] = useState(false);
   const [isPositionPickerFocused, setIsPositionPickerFocused] = useState(false);
-  const { getCategories, getPositionsByRestaurant, isLoading } =
-    useContext(AuthContext);
+  const {
+    getCategories,
+    getPositionsByRestaurant,
+    getAvailableSlots,
+    addReservations,
+    isLoading,
+  } = useContext(AuthContext);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -75,12 +82,39 @@ const CreateReservationScreen = ({ route }) => {
     setShowDatePicker(true);
   };
 
-  const showAvailability = () => {
+  const showAvailability = async () => {
     if (date && guestCount && category && position) {
+      const params = {
+        date,
+        guestCount,
+        category,
+        position,
+        id,
+      };
+      const termins = await getAvailableSlots(params);
+      setTermins(termins.data);
       setAvailability(true);
     } else {
       Alert.alert("Greška", "Molimo vas da popunite sva polja.");
     }
+  };
+
+  const hideModalReservation = async () => {
+    console.log(date);
+    const dateOnly = date.toISOString().slice(0, 10);
+    const timeOnly = selectedTimeSlot.toTimeString().slice(0, 8);
+    const dateTime = `${dateOnly} ${timeOnly}`;
+    const params = {
+      restaurantId: id,
+      categoryId: category.id,
+      positionId: position.id,
+      startDateTime: dateTime,
+    };
+    console.log(params);
+    const res = await addReservations(params);
+    console.log(res);
+    Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
+    setVisibleReservation(false);
   };
 
   const openTimeSlotModal = (slot) => {
@@ -241,7 +275,7 @@ const CreateReservationScreen = ({ route }) => {
             <Card.Content>
               <ScrollView horizontal style={styles.timeSlotContainer}>
                 {timeSlots.map((slot, index) => {
-                  const isAvailable = Math.random() > 0.2;
+                  const isAvailable = termins[index];
                   return (
                     <TouchableOpacity
                       key={index}
