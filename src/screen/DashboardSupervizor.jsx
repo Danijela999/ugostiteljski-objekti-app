@@ -14,7 +14,9 @@ export default function DashboarSupervizor() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Administracija korisnika") {
+          if (route.name === "Korisnici") {
+            iconName = focused ? "settings" : "settings-outline";
+          } else if (route.name === "Kategorije i pozicije") {
             iconName = focused ? "settings" : "settings-outline";
           } else if (route.name === "Profil") {
             iconName = focused ? "person" : "person-outline";
@@ -26,8 +28,9 @@ export default function DashboarSupervizor() {
         tabBarInactiveTintColor: "gray",
       })}
     >
+      <Tab.Screen name="Korisnici" component={AdministrationUsers} />
       <Tab.Screen
-        name="Administracija korisnika"
+        name="Kategorije i pozicije"
         component={AdministrationUsers}
       />
       <Tab.Screen name="Profil" component={ProfileScreen} />

@@ -136,6 +136,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getUsersRoleByEmail = async (email) => {
+    setIsLoading(true);
+
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(`/users/roles?email=${email}`, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      let users = res.data;
+
+      console.log(users);
+
+      setIsLoading(false);
+      return users;
+    } catch (error) {
+      console.log(`getUsersRoleByEmail error ${error}`);
+      setIsLoading(false);
+    }
+  };
+
   const changeRoles = async (params) => {
     setIsLoading(true);
     try {
@@ -361,7 +383,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
       return user;
     } catch (error) {
-      console.log(`getAllRestaurantsByCoordinates error ${error}`);
+      console.log(`getUserByEmail error ${error}`);
       setIsLoading(false);
     }
   };
@@ -450,6 +472,7 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         getAllUsers,
+        getUsersRoleByEmail,
         changeRoles,
         logout,
         addRestaurant,

@@ -40,6 +40,11 @@ const ProfileScreen = () => {
   });
   const [secureEntery, setSecureEntery] = useState(true);
   const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   useEffect(() => {
     const getUserInformations = async () => {
       const userInfo = await getUserByEmail();
@@ -123,6 +128,7 @@ const ProfileScreen = () => {
       Alert.alert("Greska", "Doslo je do greske prilikom promene sifre");
       setPassword("");
     }
+    setVisible(false);
   };
 
   return (
@@ -143,32 +149,56 @@ const ProfileScreen = () => {
         </Text>
         <Text style={styles.textProfile}>Email: {profileInfo.email}</Text>
 
-        <View style={styles.inputContainer}>
-          <SimpleLineIcons name={"lock"} size={30} color={colors.secondary} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Unesi novu lozinku"
-            placeholderTextColor={colors.secondary}
-            secureTextEntry={secureEntery}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setSecureEntery((prev) => !prev);
-            }}
-          >
-            <SimpleLineIcons name={"eye"} size={20} color={colors.secondary} />
-          </TouchableOpacity>
-        </View>
         <TouchableOpacity
           mode="contained"
-          onPress={changePassword}
+          onPress={showModal}
           style={styles.detailButton}
           labelStyle={{ fontSize: 18 }}
         >
           <Text style={styles.buttonText}>Promeni lozinku</Text>
         </TouchableOpacity>
+        <Portal>
+          <Modal
+            visible={visible}
+            onDismiss={hideModal}
+            contentContainerStyle={styles.modalContainer}
+          >
+            <Text style={styles.modalTitle}>Promeni lozinku</Text>
+            <View style={styles.inputContainer}>
+              <SimpleLineIcons
+                name={"lock"}
+                size={30}
+                color={colors.secondary}
+              />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Unesi novu lozinku"
+                placeholderTextColor={colors.secondary}
+                secureTextEntry={secureEntery}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setSecureEntery((prev) => !prev);
+                }}
+              >
+                <SimpleLineIcons
+                  name={"eye"}
+                  size={20}
+                  color={colors.secondary}
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              mode="contained"
+              onPress={changePassword}
+              style={styles.closeButton}
+            >
+              <Text style={styles.buttonText}>Sačuvaj</Text>
+            </TouchableOpacity>
+          </Modal>
+        </Portal>
       </View>
     </PaperProvider>
   );
@@ -199,7 +229,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textProfile: {
-    fontSize: 22,
+    fontSize: 20,
     textAlign: "center",
     marginTop: 15,
   },
@@ -210,7 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     height: 50,
     width: "80%",
-    marginTop: 20,
+    marginTop: 80,
     backgroundColor: colors.zelena,
     borderRadius: 100,
   },
@@ -228,7 +258,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.secondary,
     borderRadius: 100,
-    marginLeft: "10%",
     paddingHorizontal: 10,
     marginTop: 30,
     flexDirection: "row",
@@ -248,6 +277,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     padding: 10,
+  },
+
+  modalContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalDescription: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  closeButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.zelena,
+    borderRadius: 100,
+    width: "80%",
+    marginTop: 10,
   },
 });
 

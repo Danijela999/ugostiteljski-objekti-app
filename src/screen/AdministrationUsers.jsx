@@ -10,11 +10,13 @@ import {
 import { colors } from "../utils/colors";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-import { Checkbox } from "react-native-paper";
+import { Checkbox, TextInput } from "react-native-paper";
 
 const AdministrationUsers = ({}) => {
   const [users, setUsers] = useState([]);
-  const { getAllUsers, changeRoles } = useContext(AuthContext);
+  const { getAllUsers, getUsersRoleByEmail, changeRoles } =
+    useContext(AuthContext);
+  const [usersSearch, setUsersSearch] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [modifiedUsers, setModifiedUsers] = useState([]);
 
@@ -54,6 +56,11 @@ const AdministrationUsers = ({}) => {
     });
   };
 
+  const searchUsers = async () => {
+    const users = await getUsersRoleByEmail(usersSearch);
+    setUsers(users.data);
+  };
+
   const handleSave = () => {
     console.log("Modified users:", modifiedUsers);
     const isChange = changeRoles({ users: [...modifiedUsers] });
@@ -75,17 +82,42 @@ const AdministrationUsers = ({}) => {
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
-
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor="#999"
+        value={usersSearch}
+        onChangeText={(text) => setUsersSearch(text)}
+        theme={{
+          colors: {
+            text: colors.zelena,
+            placeholder: colors.zelena,
+            primary: colors.zelena,
+            underlineColor: "transparent",
+            background: "transparent",
+          },
+        }}
+      />
+      <TouchableOpacity
+        mode="contained"
+        onPress={searchUsers}
+        style={styles.detailButton}
+      >
+        <Text style={styles.buttonText}>Pretraži</Text>
+      </TouchableOpacity>
       <View style={styles.headerRow}>
         <Text style={styles.headerText}>Korisnik</Text>
         <Text style={styles.headerText}>Admin</Text>
       </View>
 
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.email}
-        renderItem={renderUserItem}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.email}
+          renderItem={renderUserItem}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText} labelStyle={{ fontSize: 18 }}>
@@ -142,6 +174,41 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     textAlign: "center",
+  },
+  detailButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    marginLeft: "20%",
+    width: "60%",
+    backgroundColor: colors.zelena,
+    borderRadius: 100,
+  },
+  input: {
+    height: 50,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "#fff",
+    fontSize: 16,
+    color: "#333",
+    shadowColor: "#000",
+    borderBottomColor: colors.zelena,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
+  },
+  listContainer: {
+    flex: 1,
+    maxHeight: 400,
   },
 });
 
