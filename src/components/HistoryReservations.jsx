@@ -5,7 +5,7 @@ import { Text } from "react-native-paper";
 const HistoryReservationCard = ({ imageUrl, restaurantName, time }) => {
   return (
     <View style={styles.container}>
-      <Image source={imageUrl} style={styles.image} />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.restaurantName}>{restaurantName}</Text>
         <Text style={styles.time}>{time}</Text>

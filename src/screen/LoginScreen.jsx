@@ -21,9 +21,13 @@ const LoginScreen = () => {
   const { isLoading, login } = useContext(AuthContext);
 
   const handleGoBack = () => {
+    setEmail(null);
+    setPassword(null);
     navigation.goBack();
   };
   const handleSignup = () => {
+    setEmail(null);
+    setPassword(null);
     navigation.navigate("SIGNUP");
   };
 
@@ -81,7 +85,7 @@ const LoginScreen = () => {
           <Text style={styles.loginText}>Uloguj se</Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
-          <Text style={styles.accountText}>Da li imas nalog?</Text>
+          <Text style={styles.accountText}>Da li imaš nalog?</Text>
           <TouchableOpacity onPress={handleSignup}>
             <Text style={styles.signupText}>Registruj se</Text>
           </TouchableOpacity>

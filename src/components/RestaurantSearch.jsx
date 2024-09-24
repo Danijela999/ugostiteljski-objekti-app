@@ -19,7 +19,7 @@ const RestaurantSearch = ({ navigation, restaurant, image, time }) => {
           style={styles.closeButton}
           onPress={() => handlePress(restaurant)}
         >
-          <Text style={styles.buttonText}>Rezervisi</Text>
+          <Text style={styles.buttonText}>Rezerviši</Text>
         </TouchableOpacity>
       </View>
     </View>

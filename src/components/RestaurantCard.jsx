@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Image, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { Text, Portal, Modal } from "react-native-paper";
+import { AuthContext } from "../context/AuthContext";
 import { colors } from "../utils/colors";
 
 const RestaurantCard = ({
@@ -9,21 +10,33 @@ const RestaurantCard = ({
   time,
   position,
   guestCount,
+  restaurantId,
+  tableId,
+  email,
+  startDateTime,
+  onReservationDeleted,
 }) => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const { deleteReservations } = useContext(AuthContext);
 
-  const deleteRezervation = () => {
-    Alert.alert(
-      "Greška",
-      "Došlo je do greške prilikom pokušaja da se obriše rezervacija."
-    );
+  const deleteReservation = async () => {
+    const params = {
+      restaurantId,
+      tableId,
+      email,
+      startDateTime,
+    };
+    setVisible(false);
+    console.log(params);
+    await deleteReservations(params);
+    onReservationDeleted();
   };
 
   return (
     <View style={styles.container}>
-      <Image source={imageUrl} style={styles.image} />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.restaurantName}>{restaurantName}</Text>
         <Text style={styles.time}>{time}</Text>
@@ -41,7 +54,7 @@ const RestaurantCard = ({
           onDismiss={hideModal}
           contentContainerStyle={styles.modalContainer}
         >
-          <Image source={imageUrl} style={styles.imageModal} />
+          <Image source={{ uri: imageUrl }} style={styles.imageModal} />
           <Text style={styles.modalTitle}>{restaurantName}</Text>
           <Text style={styles.modalDescription}>Vreme: {time}</Text>
           <Text style={styles.modalDescription}>
@@ -52,7 +65,7 @@ const RestaurantCard = ({
           <TouchableOpacity
             mode="contained"
             style={styles.closeButton}
-            onPress={deleteRezervation}
+            onPress={deleteReservation}
           >
             <Text style={styles.buttonText}>Obriši rezervaciju</Text>
           </TouchableOpacity>

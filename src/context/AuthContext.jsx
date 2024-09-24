@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(`login error ${error}`);
-      Alert.alert("Greska", "Doslo je do greske!");
+      Alert.alert("Greška", "Pogrešno uneseno korisničko ime ili lozinka!");
       setIsLoading(false);
     }
   };
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
       return users;
     } catch (error) {
       console.log(`getAllUsers error ${error}`);
-      Alert.alert("Greska", "Doslo je do greske!");
+      Alert.alert("Greška", "Doslo je do greške!");
       setIsLoading(false);
     }
   };
@@ -166,7 +166,7 @@ export const AuthProvider = ({ children }) => {
       return true;
     } catch (error) {
       console.log(`getAllUsers error ${error}`);
-      Alert.alert("Greska", "Doslo je do greske!");
+      Alert.alert("Greška", "Doslo je do greške!");
       setIsLoading(false);
       return false;
     }
@@ -433,7 +433,7 @@ export const AuthProvider = ({ children }) => {
       return restaurantInfo;
     } catch (error) {
       setIsLoading(false);
-      Alert.alert("Greska", "Ne postoji ugostiteljski objekat sa tim imenom!");
+      Alert.alert("Greška", "Ne postoji ugostiteljski objekat sa tim imenom!");
     }
   };
 
@@ -464,6 +464,65 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getReservationsByUser = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(`/reservations?email=${email}`, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      const reservations = res.data;
+      setIsLoading(false);
+      return reservations;
+    } catch (error) {
+      setIsLoading(false);
+      console.log(`getReservationsByUser error ${error}`);
+    }
+  };
+
+  const getActiveReservationsByUser = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(`/reservations/active?email=${email}`, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      const reservations = res.data;
+      console.log(reservations);
+      setIsLoading(false);
+      return reservations;
+    } catch (error) {
+      setIsLoading(false);
+      console.log(`getReservationsByUser error ${error}`);
+    }
+  };
+
+  const getActiveReservationsPerRestaurant = async () => {
+    setIsLoading(true);
+
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.get(`/reservations/restaurants/active?email=${email}`, {
+          headers: { Authorization: `${token}` },
+        })
+      );
+
+      const reservations = res.data;
+      console.log(reservations);
+      setIsLoading(false);
+      return reservations;
+    } catch (error) {
+      setIsLoading(false);
+      console.log(`getActiveReservationsPerRestaurant error ${error}`);
+    }
+  };
+
   const addReservations = async (params) => {
     setIsLoading(true);
     console.log(params);
@@ -484,22 +543,46 @@ export const AuthProvider = ({ children }) => {
       return true;
     } catch (error) {
       setIsLoading(false);
-      Alert.alert("Greska", "Doslo je do greske!");
+      Alert.alert("Greška", "Doslo je do greške!");
       console.log(`addReservations error ${error}`);
+    }
+  };
+
+  const deleteReservations = async (params) => {
+    setIsLoading(true);
+    console.log(params);
+    try {
+      const res = await makeAuthenticatedRequest((token) =>
+        instance.delete(`/reservations`, {
+          headers: { Authorization: `${token}` },
+          data: params,
+        })
+      );
+
+      console.log(res.data);
+
+      setIsLoading(false);
+      Alert.alert("Info", "Rezervacija je uspešno obrisana.");
+      navigation.navigate("DASHBOARD");
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert("Greška", "Doslo je do greške!");
+      console.log(`deleteReservations error ${error}`);
     }
   };
 
   const logout = async () => {
     setIsLoading(true);
+    const params = {
+      accessToken,
+      refreshToken,
+    };
     try {
       await makeAuthenticatedRequest((token) =>
-        instance.post(
-          `/logout`,
-          {},
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
+        instance.delete(`users/logout`, {
+          headers: { Authorization: `${token}` },
+          data: params,
+        })
       );
 
       await AsyncStorage.removeItem("userInfo");
@@ -511,6 +594,7 @@ export const AuthProvider = ({ children }) => {
       setRefreshToken(null);
       setEmail(null);
       setIsLoading(false);
+      navigation.navigate("LOGIN");
     } catch (error) {
       console.log(`logout error ${error}`);
       setIsLoading(false);
@@ -539,7 +623,11 @@ export const AuthProvider = ({ children }) => {
         getUserByEmail,
         changePasswordService,
         getAvailableSlots,
+        getReservationsByUser,
+        getActiveReservationsByUser,
+        getActiveReservationsPerRestaurant,
         addReservations,
+        deleteReservations,
       }}
     >
       {children}

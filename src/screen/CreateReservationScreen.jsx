@@ -17,6 +17,7 @@ import {
 } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
 
 import { colors } from "../utils/colors";
 import { Picker } from "@react-native-picker/picker";
@@ -44,6 +45,7 @@ const generateTimeSlots = (startTime, endTime) => {
 };
 
 const CreateReservationScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { item } = route.params;
   const { id, address, description, name, startTime, endTime, imageUrl } = item;
   const [visible, setVisible] = useState(false);
@@ -114,6 +116,7 @@ const CreateReservationScreen = ({ route }) => {
     const res = await addReservations(params);
     if (res) {
       Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
+      navigation.navigate("DASHBOARD");
     }
     setVisibleReservation(false);
   };

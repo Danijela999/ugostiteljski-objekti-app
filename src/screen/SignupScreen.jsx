@@ -42,7 +42,7 @@ const SignupScreen = () => {
         />
       </TouchableOpacity>
       <View style={styles.textContainer}>
-        <Text style={styles.headingText}>Hajde da pocnemo!</Text>
+        <Text style={styles.headingText}>Hajde da počnemo!</Text>
       </View>
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
@@ -106,7 +106,7 @@ const SignupScreen = () => {
           <Text style={styles.loginText}>Registruj se</Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
-          <Text style={styles.accountText}>Vec imas nalog!</Text>
+          <Text style={styles.accountText}>Već imaš nalog!</Text>
           <TouchableOpacity onPress={handleLogin}>
             <Text style={styles.signupText}>Uloguj se</Text>
           </TouchableOpacity>

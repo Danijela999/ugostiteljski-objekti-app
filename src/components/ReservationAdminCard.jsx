@@ -19,7 +19,7 @@ const ReservationAdminCard = ({
 
   return (
     <View style={styles.container}>
-      <Image source={imageUrl} style={styles.image} />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.detailsContainer}>
         <Text style={styles.reservationTitle}>{title}</Text>
         <Text style={styles.textReservation}>{restaurantName}</Text>
@@ -38,7 +38,7 @@ const ReservationAdminCard = ({
           onDismiss={hideModal}
           contentContainerStyle={styles.modalContainer}
         >
-          <Image source={imageUrl} style={styles.imageModal} />
+          <Image source={{ uri: imageUrl }} style={styles.imageModal} />
           <Text style={styles.modalTitle}>{title}</Text>
           <Text style={styles.modalDescription}>
             Naziv restorana: {restaurantName}
@@ -49,7 +49,6 @@ const ReservationAdminCard = ({
             Broj gostiju: {guestCount}
           </Text>
           <Text style={styles.modalDescription}>Pozicija: {position}</Text>
-          <Text style={styles.modalDescription}>Kategorija: {category}</Text>
 
           <TouchableOpacity
             mode="contained"

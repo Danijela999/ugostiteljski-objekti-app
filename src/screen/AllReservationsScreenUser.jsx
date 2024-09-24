@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import {
   Card,
   Modal,
@@ -10,115 +16,56 @@ import {
 import { colors } from "../utils/colors";
 import RestaurantCard from "../components/RestaurantCard";
 import HistoryReservationCard from "../components/HistoryReservations";
-
-const activeReservationInfo = [
-  {
-    image: require("../assets/smokvica.jpg"),
-    restaurantName: "Bela reka",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-];
-
-const historyReservationInfo = [
-  {
-    image: require("../assets/smokvica.jpg"),
-    restaurantName: "Bela reka",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-];
+import { AuthContext } from "../context/AuthContext";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const AllReservationsScreenUser = () => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { getReservationsByUser, getActiveReservationsByUser } =
+    useContext(AuthContext);
+  const [activeReservations, setActiveReservations] = useState([]);
+  const [allReservations, setAllReservations] = useState([]);
+  useEffect(() => {
+    const getReservations = async () => {
+      setIsLoading(true);
+      try {
+        const activeReservations = await getActiveReservationsByUser();
+        setActiveReservations(activeReservations.data);
+        const allReservations = await getReservationsByUser();
+        setAllReservations(allReservations.data);
+      } catch (error) {
+        Alert.alert("Greška", "Greška prilikom učitavanja rezervacija");
+        console.log("Greška prilikom učitavanja rezervacija", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getReservations();
+  }, []);
+
+  const getReservations = async () => {
+    setIsLoading(true);
+    try {
+      const activeReservations = await getActiveReservationsByUser();
+      setActiveReservations(activeReservations.data);
+      const allReservations = await getReservationsByUser();
+      setAllReservations(allReservations.data);
+    } catch (error) {
+      Alert.alert("Greška", "Greška prilikom učitavanja rezervacija");
+      console.log("Greška prilikom učitavanja rezervacija", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <PaperProvider>
+      <Spinner visible={isLoading} />
       <View style={styles.container}>
         <Card style={styles.card}>
           <Card.Title
@@ -127,16 +74,22 @@ const AllReservationsScreenUser = () => {
           />
           <Card.Content>
             <ScrollView style={styles.scrollContainer}>
-              {activeReservationInfo.map((reservation, index) => (
-                <RestaurantCard
-                  key={index}
-                  imageUrl={reservation.image}
-                  restaurantName={reservation.restaurantName}
-                  time={reservation.time}
-                  position={reservation.position}
-                  guestCount={reservation.guestCount}
-                />
-              ))}
+              {activeReservations.length > 0 &&
+                activeReservations.map((reservation, index) => (
+                  <RestaurantCard
+                    key={index}
+                    imageUrl={reservation.image}
+                    restaurantName={reservation.name}
+                    time={`${reservation.dateOnly}, ${reservation.startTime} - ${reservation.endTime}`}
+                    position={reservation.position}
+                    guestCount={reservation.guestCount}
+                    restaurantId={reservation.restaurantId}
+                    tableId={reservation.tableId}
+                    email={reservation.email}
+                    startDateTime={reservation.startDateTime}
+                    onReservationDeleted={getReservations}
+                  />
+                ))}
             </ScrollView>
           </Card.Content>
         </Card>
@@ -163,12 +116,12 @@ const AllReservationsScreenUser = () => {
           >
             <Text style={styles.modalTitle}>Sve rezervacije</Text>
             <ScrollView style={styles.scrollContainerModal}>
-              {historyReservationInfo.map((reservation, index) => (
+              {allReservations.map((reservation, index) => (
                 <HistoryReservationCard
                   key={index}
                   imageUrl={reservation.image}
-                  restaurantName={reservation.restaurantName}
-                  time={reservation.time}
+                  restaurantName={reservation.name}
+                  time={`${reservation.dateOnly}, ${reservation.startTime} - ${reservation.endTime}`}
                 />
               ))}
             </ScrollView>

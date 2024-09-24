@@ -1,55 +1,35 @@
-import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import { Card, Provider as PaperProvider } from "react-native-paper";
 import { colors } from "../utils/colors";
 import ReservationAdminCard from "../components/ReservationAdminCard";
-
-const activeReservationInfo = [
-  {
-    title: "Danijela Grbovic",
-    image: require("../assets/smokvica.jpg"),
-    restaurantName: "Bela reka",
-    email: "danijela.grbovic@gmail.com",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    title: "Danijela Grbovic",
-    image: require("../assets/smokvica.jpg"),
-    restaurantName: "Bela reka",
-    email: "danijela.grbovic@gmail.com",
-    time: "15.08.2024. 19:00 - 22:00",
-    position: "Terasa",
-    category: "Večera",
-    guestCount: 2,
-  },
-  {
-    title: "Danijela Grbovic",
-    image: require("../assets/smokvica.jpg"),
-    restaurantName: "Bela reka",
-    email: "danijela.grbovic@gmail.com",
-    time: "16.08.2024. 10:00 - 11:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-  {
-    title: "Danijela Grbovic",
-    email: "danijela.grbovic@gmail.com",
-    image: require("../assets/bela_reka.jpg"),
-    restaurantName: "Pavone Trattoria",
-    time: "15.08.2024. 09:00 - 10:00",
-    position: "Bašta",
-    category: "Doručak",
-    guestCount: 6,
-  },
-];
+import Spinner from "react-native-loading-spinner-overlay/lib";
+import { AuthContext } from "../context/AuthContext";
 
 const ReservationAdminScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { getActiveReservationsPerRestaurant } = useContext(AuthContext);
+  const [allReservations, setAllReservations] = useState([]);
+  useEffect(() => {
+    const getReservations = async () => {
+      setIsLoading(true);
+      try {
+        const allReservations = await getActiveReservationsPerRestaurant();
+        setAllReservations(allReservations.data);
+      } catch (error) {
+        Alert.alert("Greška", "Greška prilikom učitavanja rezervacija");
+        console.log("Greška prilikom učitavanja rezervacija", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getReservations();
+  }, []);
   return (
     <PaperProvider>
+      <Spinner visible={isLoading} />
       <View style={styles.container}>
         <Card style={styles.card}>
           <Card.Title
@@ -58,19 +38,19 @@ const ReservationAdminScreen = () => {
           />
           <Card.Content>
             <ScrollView style={styles.scrollContainer}>
-              {activeReservationInfo.map((reservation, index) => (
-                <ReservationAdminCard
-                  key={index}
-                  title={reservation.title}
-                  imageUrl={reservation.image}
-                  restaurantName={reservation.restaurantName}
-                  email={reservation.email}
-                  time={reservation.time}
-                  position={reservation.position}
-                  category={reservation.category}
-                  guestCount={reservation.guestCount}
-                />
-              ))}
+              {allReservations.length > 0 &&
+                allReservations.map((reservation, index) => (
+                  <ReservationAdminCard
+                    key={index}
+                    title={`${reservation.firstName} ${reservation.lastName}`}
+                    imageUrl={reservation.image}
+                    restaurantName={reservation.name}
+                    email={reservation.email}
+                    time={`${reservation.dateOnly}, ${reservation.startTime} - ${reservation.endTime}`}
+                    position={reservation.position}
+                    guestCount={reservation.guestCount}
+                  />
+                ))}
             </ScrollView>
           </Card.Content>
         </Card>
@@ -115,7 +95,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollContainer: {
-    maxHeight: 700,
+    maxHeight: 600,
+    height: "90%",
   },
 });
 

@@ -20,7 +20,7 @@ export default function Dashboard() {
             iconName = focused ? "restaurant" : "restaurant-outline";
           } else if (route.name === "Profil") {
             iconName = focused ? "person" : "person-outline";
-          } else if (route.name === "Pretraži") {
+          } else if (route.name === "Pretraga") {
             iconName = focused ? "search" : "search-outline";
           } else if (route.name === "Rezervacije") {
             iconName = focused ? "calendar" : "calendar-outline";
@@ -33,7 +33,7 @@ export default function Dashboard() {
       })}
     >
       <Tab.Screen name="Ugostiteljski objekti" component={AllRestaurants} />
-      <Tab.Screen name="Pretraži" component={SearchScreen} />
+      <Tab.Screen name="Pretraga" component={SearchScreen} />
       <Tab.Screen name="Profil" component={ProfileScreen} />
       <Tab.Screen name="Rezervacije" component={AllReservationsScreenUser} />
     </Tab.Navigator>

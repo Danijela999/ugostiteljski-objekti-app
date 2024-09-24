@@ -5,12 +5,10 @@ import {
   Image,
   TouchableOpacity,
   Alert,
-  ScrollView,
   TextInput,
 } from "react-native";
 import {
   Text,
-  Button,
   Card,
   Modal,
   Portal,
@@ -31,6 +29,7 @@ const ProfileScreen = () => {
     getUserByEmail,
     changePasswordService,
     isLoading,
+    logout,
   } = useContext(AuthContext);
   const [profileImage, setProfileImage] = useState(null);
   const [profileInfo, setPrfileInfo] = useState({
@@ -115,6 +114,10 @@ const ProfileScreen = () => {
     await changeProfilePhoto(photoUrl);
   };
 
+  const logoutUser = async () => {
+    await logout();
+  };
+
   const changePassword = async () => {
     if (password === "") {
       Alert.alert("Info", "Sifra mora biti popunjena!");
@@ -149,14 +152,23 @@ const ProfileScreen = () => {
         </Text>
         <Text style={styles.textProfile}>Email: {profileInfo.email}</Text>
 
-        <TouchableOpacity
-          mode="contained"
-          onPress={showModal}
-          style={styles.detailButton}
-          labelStyle={{ fontSize: 18 }}
-        >
-          <Text style={styles.buttonText}>Promeni lozinku</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.loginButtonWrapper]}
+            onPress={showModal}
+          >
+            <Text style={styles.loginButtonText}>Promeni lozinku</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.loginButtonWrapper,
+              { backgroundColor: colors.white },
+            ]}
+            onPress={logoutUser}
+          >
+            <Text style={styles.signupButtonText}>Odjavi se</Text>
+          </TouchableOpacity>
+        </View>
         <Portal>
           <Modal
             visible={visible}
@@ -303,6 +315,30 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: "80%",
     marginTop: 10,
+  },
+  buttonContainer: {
+    marginTop: 80,
+    flexDirection: "row",
+    borderWidth: 2,
+    borderColor: colors.primary,
+    width: "100%",
+    height: 60,
+    borderRadius: 100,
+    backgroundColor: colors.white,
+  },
+  loginButtonWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "50%",
+    backgroundColor: colors.zelena,
+    borderRadius: 98,
+  },
+  loginButtonText: {
+    color: colors.white,
+    fontSize: 18,
+  },
+  signupButtonText: {
+    fontSize: 18,
   },
 });
 
