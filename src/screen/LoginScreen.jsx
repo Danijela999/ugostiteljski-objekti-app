@@ -79,6 +79,8 @@ const LoginScreen = () => {
         <TouchableOpacity
           style={styles.loginButtonWrapper}
           onPress={() => {
+            setEmail("");
+            setPassword("");
             login(email, password);
           }}
         >

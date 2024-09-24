@@ -18,6 +18,7 @@ import RestaurantCard from "../components/RestaurantCard";
 import HistoryReservationCard from "../components/HistoryReservations";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { eventEmitter } from "../eventEmitter";
 
 const AllReservationsScreenUser = () => {
   const [visible, setVisible] = useState(false);
@@ -46,9 +47,14 @@ const AllReservationsScreenUser = () => {
     };
 
     getReservations();
+    eventEmitter.on("reservationCreated", getReservations);
+
+    return () => {
+      eventEmitter.off("reservationCreated", getReservations);
+    };
   }, []);
 
-  const getReservations = async () => {
+  const getReservationsChild = async () => {
     setIsLoading(true);
     try {
       const activeReservations = await getActiveReservationsByUser();
@@ -87,7 +93,7 @@ const AllReservationsScreenUser = () => {
                     tableId={reservation.tableId}
                     email={reservation.email}
                     startDateTime={reservation.startDateTime}
-                    onReservationDeleted={getReservations}
+                    onReservationDeleted={getReservationsChild}
                   />
                 ))}
             </ScrollView>

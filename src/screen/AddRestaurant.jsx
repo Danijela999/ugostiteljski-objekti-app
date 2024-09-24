@@ -101,7 +101,7 @@ export default function AddRestaurant() {
           setLoadingMap(false);
         } else {
           setLoadingMap(false);
-          Alert.alert("Error", "Adresa nije pronadjena");
+          Alert.alert("Error", "Adresa nije pronađena");
         }
       })
       .catch((error) => {
@@ -241,7 +241,7 @@ export default function AddRestaurant() {
 
     const res = await addRestaurant(params);
     if (res) {
-      Alert.alert("Info", "Restoran je uspesno dodat!");
+      Alert.alert("Info", "Restoran je uspešno dodat!");
       setName("");
       setAddress("");
       setImageUrl("");
@@ -252,7 +252,7 @@ export default function AddRestaurant() {
       setStartTime(0);
       setDescription("");
     } else {
-      Alert.alert("Greska", "Doslo je do greske");
+      Alert.alert("Greška", "Došlo je do greške");
     }
   };
 
@@ -285,7 +285,7 @@ export default function AddRestaurant() {
                 style={styles.buttonRestaurant}
                 onPress={searchAddress}
               >
-                <Text style={styles.buttonText}>Pretrazite adresu</Text>
+                <Text style={styles.buttonText}>Pretražite adresu</Text>
               </TouchableOpacity>
             </Card.Content>
           </Card>

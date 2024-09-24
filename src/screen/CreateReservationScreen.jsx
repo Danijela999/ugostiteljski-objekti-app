@@ -23,6 +23,7 @@ import { colors } from "../utils/colors";
 import { Picker } from "@react-native-picker/picker";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { eventEmitter } from "./../eventEmitter";
 
 const generateTimeSlots = (startTime, endTime) => {
   const slots = [];
@@ -115,8 +116,16 @@ const CreateReservationScreen = ({ route }) => {
     console.log(params);
     const res = await addReservations(params);
     if (res) {
-      Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
-      navigation.navigate("DASHBOARD");
+      Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.", [
+        {
+          text: "OK",
+          onPress: () => {
+            // Navigacija na screen "Rezervacije" unutar Dashboard-a nakon što korisnik pritisne OK
+            navigation.navigate("Rezervacije");
+          },
+        },
+      ]);
+      eventEmitter.emit("reservationCreated", res);
     }
     setVisibleReservation(false);
   };

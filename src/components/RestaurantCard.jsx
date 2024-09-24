@@ -28,10 +28,17 @@ const RestaurantCard = ({
       email,
       startDateTime,
     };
-    setVisible(false);
-    console.log(params);
+
     await deleteReservations(params);
-    onReservationDeleted();
+    Alert.alert("Info", "Rezervacija je uspešno obrisana.", [
+      {
+        text: "OK",
+        onPress: () => {
+          onReservationDeleted();
+          setVisible(false);
+        },
+      },
+    ]);
   };
 
   return (

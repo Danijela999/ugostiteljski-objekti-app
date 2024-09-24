@@ -94,7 +94,7 @@ const AllRestaurants = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
-      <Text style={styles.header}>Restorani u blizini</Text>
+      <Text style={styles.header1}>Restorani u blizini</Text>
       {renderHorizontalScroll(restaurantsNearby)}
 
       <Text style={styles.header}>Novi restorani</Text>
@@ -132,6 +132,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
+  header1: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 6,
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
@@ -139,12 +145,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   card: {
-    width: screenWidth / 3,
-    height: 230,
+    width: screenWidth / 2.7,
+    height: 250,
     marginRight: 10,
   },
   image: {
-    height: 130,
+    height: 150,
     width: "100%",
   },
   title: {

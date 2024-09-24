@@ -559,11 +559,7 @@ export const AuthProvider = ({ children }) => {
         })
       );
 
-      console.log(res.data);
-
       setIsLoading(false);
-      Alert.alert("Info", "Rezervacija je uspešno obrisana.");
-      navigation.navigate("DASHBOARD");
     } catch (error) {
       setIsLoading(false);
       Alert.alert("Greška", "Doslo je do greške!");

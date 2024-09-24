@@ -100,6 +100,10 @@ const SignupScreen = () => {
         <TouchableOpacity
           style={styles.loginButtonWrapper}
           onPress={() => {
+            setFirstName("");
+            setLastName("");
+            setPassword("");
+            setEmail("");
             register(firstName, lastName, email, password);
           }}
         >
