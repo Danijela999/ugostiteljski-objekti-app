@@ -112,8 +112,9 @@ const CreateReservationScreen = ({ route }) => {
     };
     console.log(params);
     const res = await addReservations(params);
-    console.log(res);
-    Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
+    if (res) {
+      Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.");
+    }
     setVisibleReservation(false);
   };
 

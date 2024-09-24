@@ -439,11 +439,11 @@ export const AuthProvider = ({ children }) => {
 
   const getAvailableSlots = async (params) => {
     setIsLoading(true);
-    console.log(params);
+
     const { date, guestCount, category, position, id } = params;
     const positionId = position.id;
     const categoryId = category.id;
-    console.log(positionId);
+
     const dateOnly = date.toISOString().slice(0, 10);
     try {
       const res = await makeAuthenticatedRequest((token) =>
@@ -456,7 +456,6 @@ export const AuthProvider = ({ children }) => {
       );
 
       const termins = res.data;
-      console.log(termins);
       setIsLoading(false);
       return termins;
     } catch (error) {
@@ -479,13 +478,14 @@ export const AuthProvider = ({ children }) => {
         })
       );
 
-      const termins = res.data;
-      console.log(termins);
+      console.log(res.data);
+
       setIsLoading(false);
-      return termins;
+      return true;
     } catch (error) {
       setIsLoading(false);
-      console.log(`getAvailableSlots error ${error}`);
+      Alert.alert("Greska", "Doslo je do greske!");
+      console.log(`addReservations error ${error}`);
     }
   };
 
