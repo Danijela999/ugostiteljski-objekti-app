@@ -118,11 +118,12 @@ const AdministrationUsers = ({}) => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText} labelStyle={{ fontSize: 18 }}>
-          Sačuvaj
-        </Text>
+      <TouchableOpacity
+        mode="contained"
+        onPress={handleSave}
+        style={styles.detailButton}
+      >
+        <Text style={styles.buttonText}>Sačuvaj</Text>
       </TouchableOpacity>
     </View>
   );
@@ -159,14 +160,13 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   saveButton: {
-    paddingVertical: 15,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: "10%",
+    marginLeft: "20%",
     fontSize: 20,
-    height: 50,
-    width: "80%",
-    marginTop: 20,
+    height: 45,
+    width: "60%",
+    marginTop: 10,
     backgroundColor: colors.zelena,
     borderRadius: 100,
   },
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     maxHeight: 400,
+    height: "80%",
   },
 });
 
