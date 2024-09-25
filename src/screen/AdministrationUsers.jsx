@@ -65,7 +65,7 @@ const AdministrationUsers = ({}) => {
     console.log("Modified users:", modifiedUsers);
     const isChange = changeRoles({ users: [...modifiedUsers] });
     console.log(isChange);
-    Alert.alert("Informacija", "Promene su uspešno sačuvane.");
+    Alert.alert("", "Promene su uspešno sačuvane.");
   };
 
   const renderUserItem = ({ item }) => (
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   detailButton: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
     marginLeft: "20%",
     width: "60%",
     backgroundColor: colors.zelena,
@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    maxHeight: 600,
-    height: "80%",
+    maxHeight: 500,
+    height: "70%",
   },
 });
 

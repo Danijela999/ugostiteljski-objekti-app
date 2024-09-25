@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(`login error ${error}`);
-      Alert.alert("Greška", "Pogrešno uneseno korisničko ime ili lozinka!");
+      Alert.alert("Greška", "Pogrešno ste uneli korisničko ime ili lozinku!");
       setIsLoading(false);
     }
   };

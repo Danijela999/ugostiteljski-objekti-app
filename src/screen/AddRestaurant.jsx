@@ -241,7 +241,7 @@ export default function AddRestaurant() {
 
     const res = await addRestaurant(params);
     if (res) {
-      Alert.alert("Info", "Restoran je uspešno dodat!");
+      Alert.alert("", "Restoran je uspešno dodat!");
       setName("");
       setAddress("");
       setImageUrl("");
@@ -263,7 +263,7 @@ export default function AddRestaurant() {
         <View style={styles.container}>
           <Spinner visible={isLoadingMap} />
           <Card style={styles.card}>
-            <Card.Title title="Dodavanje" titleStyle={styles.cardTitle} />
+            {/* <Card.Title title="Administracija ugostiteljskog objekta" titleStyle={styles.cardTitle} /> */}
             <Card.Content>
               <TextInput
                 style={styles.input}
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   cardTitle: {
-    fontSize: 26,
+    fontSize: 20,
     paddingTop: 10,
     fontWeight: "bold",
     textAlign: "center",

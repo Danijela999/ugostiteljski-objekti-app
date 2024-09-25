@@ -15,7 +15,7 @@ export default function DashboardAdmin() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Dodaj ugostiteljski objekat") {
+          if (route.name === "Administracija ugostiteljskog objekta") {
             iconName = focused ? "restaurant" : "restaurant-outline";
           } else if (route.name === "Profil") {
             iconName = focused ? "person" : "person-outline";
@@ -27,10 +27,12 @@ export default function DashboardAdmin() {
         },
         tabBarActiveTintColor: colors.zelena,
         tabBarInactiveTintColor: "gray",
+        // headerShown: false
+
       })}
     >
       <Tab.Screen
-        name="Dodaj ugostiteljski objekat"
+        name="Administracija ugostiteljskog objekta"
         component={AddRestaurant}
       />
       <Tab.Screen name="Rezervacije" component={ReservationAdminScreen} />

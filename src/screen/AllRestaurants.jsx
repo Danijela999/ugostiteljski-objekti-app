@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: screenWidth / 2.7,
-    height: 250,
+    height: 285,
     marginRight: 10,
   },
   image: {

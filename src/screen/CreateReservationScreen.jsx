@@ -116,7 +116,7 @@ const CreateReservationScreen = ({ route }) => {
     console.log(params);
     const res = await addReservations(params);
     if (res) {
-      Alert.alert("Info", "Uspešno je uneta nova rezervacija u sistem.", [
+      Alert.alert("", "Uspešno ste rezervisali mesto.", [
         {
           text: "OK",
           onPress: () => {

@@ -30,7 +30,7 @@ const RestaurantCard = ({
     };
 
     await deleteReservations(params);
-    Alert.alert("Info", "Rezervacija je uspešno obrisana.", [
+    Alert.alert("", "Rezervacija je uspešno obrisana.", [
       {
         text: "OK",
         onPress: () => {
@@ -74,7 +74,7 @@ const RestaurantCard = ({
             style={styles.closeButton}
             onPress={deleteReservation}
           >
-            <Text style={styles.buttonText}>Obriši rezervaciju</Text>
+            <Text style={styles.buttonText}>Otkaži rezervaciju</Text>
           </TouchableOpacity>
           <TouchableOpacity
             mode="contained"
