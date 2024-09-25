@@ -115,7 +115,7 @@ const AdministrationUsers = ({}) => {
           data={users}
           keyExtractor={(item) => item.email}
           renderItem={renderUserItem}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
         />
       </View>
       <TouchableOpacity
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    maxHeight: 400,
+    maxHeight: 600,
     height: "80%",
   },
 });
